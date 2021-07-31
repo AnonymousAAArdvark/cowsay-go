@@ -24,7 +24,7 @@ func buildBalloon(lines []string, maxwidth int) string {
 
 	ret = append(ret, top)
 	if count == 1 {
-		s := fmt.Sprintf("%s %s %s", borders[5], borders[0], borders[6])
+		s := fmt.Sprintf("%s %s %s", borders[5], lines[0], borders[6])
 		ret = append(ret, s)
 	} else {
 		s := fmt.Sprintf("%s %s %s", borders[0], lines[0], borders[1])
@@ -115,7 +115,8 @@ func printFigure(name string) {
            (((____.-'        '-.  /   : :
                              (((-'\ .' /
                            _____..'  .'
-                          '-._____.-'`
+                          '-._____.-'
+`
 
 	var whale = `              \
                \
@@ -124,7 +125,9 @@ func printFigure(name string) {
 '-,  (__..-'       \\
    \\          .     |
     ',.__.   ,__.--/
-     '._/_.'___.-'`
+     '._/_.'___.-'
+`
+
 	var cat = `     \   
       \
      .ﾊ,,ﾊ
@@ -148,7 +151,8 @@ func printFigure(name string) {
      |    |
      |    |
      |    |
-     U "  U`
+     U "  U
+`
 
 	switch name {
 	case "cow":
@@ -193,7 +197,14 @@ func main() {
 		if err != nil && err == io.EOF {
 			break
 		}
-		lines = append(lines, string(line))
+		var res string
+		for i, r := range string(line) {
+			res = res + string(r)
+			if (i + 1) % 150 == 0 || i == utf8.RuneCountInString(string(line)) - 1 {
+				lines = append(lines, res)
+				res = ""
+			}
+		}
 	}
 
 	lines = tabsToSpaces(lines)
@@ -202,5 +213,4 @@ func main() {
 	balloon := buildBalloon(messages, maxwidth)
 	fmt.Println(balloon)
 	printFigure(figure)
-	fmt.Println()
 }
